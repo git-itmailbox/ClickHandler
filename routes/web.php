@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/click', 'ClickController@handleClick');
+
+Route::get('/success/{id}', 'ClickController@success');
+
+Route::get('/error/{id}', 'ClickController@error');
+
