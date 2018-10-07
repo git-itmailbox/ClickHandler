@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BadDomain;
 use App\Click;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -50,7 +51,9 @@ class ClickController extends Controller
             //returning to error page
             $found->incrementError();
             $found->save();
-            return redirect()->route('error', ['id' => $found->id]);
+            //Check for bad domain
+            $isBadDomain = $this->checkForBadDomain($found);
+            return redirect()->route('error', ['id' => $found->id, 'redirectGoogle' => $isBadDomain]);
         }
 
         $click->save();
@@ -61,6 +64,12 @@ class ClickController extends Controller
 //        return response([$ref, $param1,$ip, $userAgent, sha1($userAgent.$ip.$param1)]);
     }
 
+    /**
+     * Action show error page
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function error(Request $request, $id)
     {
 
@@ -68,9 +77,24 @@ class ClickController extends Controller
     }
 
 
+    /**
+     * Action show success page
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function success(Request $request, $id)
     {
-
         return view('success', ['click' => Click::find($id)]);
+    }
+
+    private function checkForBadDomain(Click $found)
+    {
+        if($found->ref)
+        {
+            $badDomain = BadDomain::where('name', $found->ref)->first();
+            return $badDomain? true : false;
+        }
+        return false;
     }
 }
