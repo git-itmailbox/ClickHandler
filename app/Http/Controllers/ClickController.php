@@ -88,6 +88,17 @@ class ClickController extends Controller
         return view('success', ['click' => Click::find($id)]);
     }
 
+    /**
+     * Action show all links
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index(Request $request)
+    {
+        return view('index');
+    }
+
     private function checkForBadDomain(Click $found)
     {
         if($found->ref)
