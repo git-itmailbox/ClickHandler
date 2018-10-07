@@ -16,9 +16,9 @@ Route::get('/', function () {
 });
 
 
-Route::get('/click', 'ClickController@handleClick');
+Route::get('/click/', 'ClickController@handleClick');
 
-Route::get('/success/{id}', 'ClickController@success');
+Route::get('/success/{id}', 'ClickController@success')->name('success');
 
-Route::get('/error/{id}', 'ClickController@error');
+Route::get('/error/{id}', 'ClickController@error')->name('error');
 

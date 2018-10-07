@@ -18,19 +18,59 @@ class ClickController extends Controller
         $param2 = $request->get('param2');
         $ref = $request->get('HTTP_REFERER');
 
-//        return response()->json([$request->toArray(), $request->headers->all()]);
-
-        $click = new Click([
+        $nullFields = collect([
             'user_agent' => $userAgent,
             'ip' => $ip,
-            'ref' => $ref,
             'param1' => $param1,
-            'param2' => $param2
+            ])->filter(function ($field){
+            return $field == null || empty($field );
+        });
+
+        if($nullFields->isNotEmpty())
+        {
+            //return view with error, show what field are NULL
+            dd($nullFields);
+        }
+
+        //check if click is already exists
+
+        $click = new Click([
+            'user_agent' => $request->userAgent(),
+            'ip' => $request->ip(),
+            'ref' => $request->get('HTTP_REFERER'),
+            'param1' => $request->get('param1'),
+            'param2' => $request->get('param2')
         ]);
+
+        /** @var Click $found */
+        $found = Click::find($click->generateId());
+
+        if($found)
+        {
+            //returning to error page
+            $found->incrementError();
+            $found->save();
+            return redirect()->route('error', ['id' => $found->id]);
+        }
 
         $click->save();
 
-        return "saved";
-        return response([$ref, $param1,$ip, $userAgent, sha1($userAgent.$ip.$param1)]);
+        return redirect()->route('success', ['id' => $click->id]);
+
+//        return "saved";
+//        return response([$ref, $param1,$ip, $userAgent, sha1($userAgent.$ip.$param1)]);
+    }
+
+    public function error(Request $request, $id)
+    {
+
+        return view('error');
+    }
+
+
+    public function success(Request $request, $id)
+    {
+
+        return view('success', ['click' => Click::find($id)]);
     }
 }

@@ -30,4 +30,21 @@ class Click extends Model
     {
         $this->id = $this->generateId();
     }
+
+    /**
+     *increments field error
+     */
+    public function incrementError()
+    {
+        return $this->error++;
+    }
+
+
+    /**
+     *     *increments field bad_domain
+     */
+    public function incrementBadDomain()
+    {
+        return $this->bad_domain++;
+    }
 }
