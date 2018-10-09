@@ -17,4 +17,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/clicks/{page?}', 'Api\ClickController@getClicks');
+Route::get('/clicks', 'Api\ClickController@getClicks');
