@@ -8,6 +8,12 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faCoffee, faSortDown, faSortUp, faSort} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faCoffee, faSortDown, faSortUp, faSort)
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -17,6 +23,7 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('track-list-component', require('./components/TrackListComponent.vue'));
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const app = new Vue({
     el: '#app'

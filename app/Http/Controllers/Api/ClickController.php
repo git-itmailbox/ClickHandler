@@ -12,6 +12,13 @@ class ClickController extends Controller
 {
     public function getClicks(Request $request)
     {
-        return new ClickCollection(Click::paginate(3));
+
+        $orderBy = $request->get('sortby', 'created_at');
+        $order = $request->get('order', 'DESC');
+        $perPage = $request->get('perpage', 3);
+        $clicks = Click::orderBy($orderBy, $order);
+
+        return new ClickCollection(
+            $clicks->paginate($perPage));
     }
 }
