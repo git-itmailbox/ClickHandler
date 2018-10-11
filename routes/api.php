@@ -18,3 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/clicks', 'Api\ClickController@getClicks');
+
+Route::get('/bad-domain', 'Api\BadDomainController@getBadDomains');
+
+Route::post('/bad-domain', 'Api\BadDomainController@store');
+
+Route::delete('/bad-domain/{id}', 'Api\BadDomainController@delete');

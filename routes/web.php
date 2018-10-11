@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::get('/bad-domains', function () {
+    return view('bad_domains');
+});
+
 
 Route::get('/click/', 'ClickController@handleClick');
 

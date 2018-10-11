@@ -8,12 +8,14 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+import VModal from 'vue-js-modal'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCoffee, faSortDown, faSortUp, faSort} from '@fortawesome/free-solid-svg-icons'
+import { faCoffee, faSortDown, faSortUp, faSort, faPlusSquare, faTrashAlt, faEdit} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faCoffee, faSortDown, faSortUp, faSort)
+library.add(faCoffee, faSortDown, faSortUp, faSort, faPlusSquare, faTrashAlt, faEdit)
 
+Vue.use(VModal)
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -23,6 +25,7 @@ library.add(faCoffee, faSortDown, faSortUp, faSort)
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('track-list-component', require('./components/TrackListComponent.vue'));
+Vue.component('bad-domain-list-component', require('./components/BadDomainListComponent.vue'));
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const app = new Vue({
