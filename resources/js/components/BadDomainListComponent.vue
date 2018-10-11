@@ -74,7 +74,7 @@
             </div>
         </div>
 
-        <modal name="newBadDomain">
+        <modal name="newBadDomain" @before-close="beforeCloseModal">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add new bad domain</h5>
@@ -139,12 +139,13 @@
 
             },
             showModal: function () {
-                this.$modal.show('newBadDomain',{
-                    'before-close': (event) => { console.log('this will be called before the modal closes');
-                    this.newDomain=''
-                    }
-                });
+                this.$modal.show('newBadDomain');
             },
+            beforeCloseModal: function(event)  {
+                console.log('this will be called before the modal closes')
+                this.newDomain = ''
+            },
+
             addNewDomain: function () {
 
                 axios
@@ -153,6 +154,7 @@
                     .then(()=>{
 
                         this.$modal.hide('newBadDomain')
+                        this.loadData(this.meta.current_page)
                         alert('New bad domain successfully added')
 
                         }
