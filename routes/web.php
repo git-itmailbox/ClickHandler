@@ -17,12 +17,12 @@ Route::get('/', function () {
 
 Route::get('/bad-domains', function () {
     return view('bad_domains');
-});
+})->name('bad_domains');
 
 
 Route::get('/click/', 'ClickController@handleClick');
 
 Route::get('/success/{id}', 'ClickController@success')->name('success');
 
-Route::get('/error/{id}', 'ClickController@error')->name('error');
+Route::get('/error/{id}/{redirectGoogle}', 'ClickController@error')->name('error');
 

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <a href="#" class="btn btn-success float-right" @click="showModal">
+                <a href="#" class="btn btn-success float-right" @click="showModalAddDomain">
                     <font-awesome-icon :icon="['fas','plus-square']"></font-awesome-icon>
                     Add
                 </a>
@@ -21,7 +21,7 @@
                                 </a>
                             </th>
                             <th>Name
-                                <a class="float-right" href="#" @click="setSorting('user_agent')">
+                                <a class="float-right" href="#" @click="setSorting('name')">
                                     <font-awesome-icon :icon="['fas','sort']"></font-awesome-icon>
                                 </a>
                             </th>
@@ -41,7 +41,7 @@
                             <td class="align-middle">{{domain.name}}</td>
                             <td class="align-middle">{{domain.created_at ? domain.created_at: ''}}</td>
                             <td class="align-middle">
-                                <font-awesome-icon class="text-secondary" :icon="['fas','edit']"></font-awesome-icon>
+                                <font-awesome-icon @click="showModalEditDomain(domain)" class="text-secondary" :icon="['fas','edit']"></font-awesome-icon>
                                 <font-awesome-icon @click="deleteDomain(domain.id)" class="text-danger" :icon="['fas','trash-alt']"></font-awesome-icon>
                             </td>
                         </tr>
@@ -90,6 +90,23 @@
                 </div>
             </div>
         </modal>
+
+        <modal name="editBadDomain" @before-close="beforeCloseModalEdit">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit bad domain</h5>
+                    <button type="button" class="close" @click="$modal.hide('editBadDomain')" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control form-control-lg" type="text" placeholder="your.domain.com" v-model="badDomain.name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @click="updateBadDomain()">Save</button>
+                </div>
+            </div>
+        </modal>
     </div>
 </template>
 
@@ -108,6 +125,7 @@
                 sortBy: 'created_at',
                 orderAsc: true,
                 perPage: 3,
+                badDomain: {},
                 newDomain: ''
             }
         },
@@ -138,12 +156,19 @@
                 this.loadData()
 
             },
-            showModal: function () {
+            showModalAddDomain: function () {
                 this.$modal.show('newBadDomain');
             },
+            showModalEditDomain: function (domain) {
+                this.badDomain=domain
+                this.$modal.show('editBadDomain');
+            },
             beforeCloseModal: function(event)  {
-                console.log('this will be called before the modal closes')
                 this.newDomain = ''
+            },
+            beforeCloseModalEdit: function(event)  {
+                this.loadData()
+                this.badDomain = {}
             },
 
             addNewDomain: function () {
@@ -156,10 +181,19 @@
                         this.$modal.hide('newBadDomain')
                         this.loadData(this.meta.current_page)
                         alert('New bad domain successfully added')
+                    })
+                    .catch((e) => (console.log(e)))
+            },
+            updateBadDomain: function (id) {
 
-                        }
-
-                    )
+                axios
+                    .put('/api/bad-domain/'+this.badDomain.id, {name: this.badDomain.name
+                    })
+                    .then(()=>{
+                        this.$modal.hide('editBadDomain')
+                        this.loadData(this.meta.current_page)
+                        alert('Bad domain successfully updated')
+                    })
                     .catch((e) => (console.log(e)))
             },
             deleteDomain: function (domainId) {

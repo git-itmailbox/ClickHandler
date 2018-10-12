@@ -9,15 +9,18 @@ use Illuminate\Support\Facades\Hash;
 
 class ClickController extends Controller
 {
-    //
-
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function handleClick(Request $request)
     {
         $userAgent = $request->userAgent();
         $ip = $request->ip();
         $param1 = $request->get('param1');
         $param2 = $request->get('param2');
-        $ref = $request->get('HTTP_REFERER');
+        $ref = $request->server('HTTP_REFERER');
+        $parseRef = parse_url($ref);
 
         $nullFields = collect([
             'user_agent' => $userAgent,
@@ -34,13 +37,12 @@ class ClickController extends Controller
         }
 
         //check if click is already exists
-
         $click = new Click([
-            'user_agent' => $request->userAgent(),
-            'ip' => $request->ip(),
-            'ref' => $request->get('HTTP_REFERER'),
-            'param1' => $request->get('param1'),
-            'param2' => $request->get('param2')
+            'user_agent' => $userAgent,
+            'ip' => $ip,
+            'ref' => $parseRef['host'],
+            'param1' => $param1,
+            'param2' => $param2
         ]);
 
         /** @var Click $found */
@@ -50,18 +52,19 @@ class ClickController extends Controller
         {
             //returning to error page
             $found->incrementError();
-            $found->save();
             //Check for bad domain
             $isBadDomain = $this->checkForBadDomain($found);
+            if($isBadDomain)
+            {
+                $found->incrementBadDomain();
+            }
+            $found->save();
             return redirect()->route('error', ['id' => $found->id, 'redirectGoogle' => $isBadDomain]);
         }
 
         $click->save();
 
         return redirect()->route('success', ['id' => $click->id]);
-
-//        return "saved";
-//        return response([$ref, $param1,$ip, $userAgent, sha1($userAgent.$ip.$param1)]);
     }
 
     /**
@@ -70,10 +73,9 @@ class ClickController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function error(Request $request, $id)
+    public function error(Request $request, $id, $redirectGoogle)
     {
-
-        return view('error');
+        return view('error', ['redirectGoogle' => $redirectGoogle]);
     }
 
 

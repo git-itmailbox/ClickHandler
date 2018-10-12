@@ -27,6 +27,16 @@ class BadDomainController extends Controller
         return BadDomain::create($request->all());
     }
 
+    public function update(Request $request, $id)
+    {
+        $article = BadDomain::findOrFail($id);
+        $article->name= $request->get('name');
+        $article->save();
+
+        return response(['message'=>'ok']);
+
+    }
+
     public function delete(Request $request, $id)
     {
         $article = BadDomain::findOrFail($id);

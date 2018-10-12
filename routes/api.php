@@ -24,3 +24,5 @@ Route::get('/bad-domain', 'Api\BadDomainController@getBadDomains');
 Route::post('/bad-domain', 'Api\BadDomainController@store');
 
 Route::delete('/bad-domain/{id}', 'Api\BadDomainController@delete');
+
+Route::put('/bad-domain/{id}', 'Api\BadDomainController@update');

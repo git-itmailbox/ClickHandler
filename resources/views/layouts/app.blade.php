@@ -35,7 +35,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="btn btn-light" href="#">LINK</a>
+                            <a class="btn btn-light" href="{{route('bad_domains')}}">Bad Domains</a>
 
                         </li>
                             {{--<li class="nav-item">--}}
